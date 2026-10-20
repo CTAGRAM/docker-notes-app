@@ -4,7 +4,7 @@ services:
     image: docker-notes-app:latest
     container_name: docker-notes-app
     ports:
-      - "3000:3000"
+      - "${HOST_PORT:-3000}:3000"
     environment:
       # Set to "true" when serving over HTTPS (e.g. behind a TLS reverse proxy).
       COOKIE_SECURE: "false"

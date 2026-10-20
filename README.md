@@ -2,20 +2,53 @@
 
 A Dockerized notes app with personalized, secure authentication.
 
+**Repository:** https://github.com/CTAGRAM/docker-notes-app
+
 ## Quick start
 
+**You need:** [Git](https://git-scm.com/downloads) and [Docker Desktop](https://www.docker.com/products/docker-desktop/) (installed and running).
+
+Copy and paste this into your terminal:
+
 ```bash
+git clone https://github.com/CTAGRAM/docker-notes-app.git
+cd docker-notes-app
 docker compose up -d --build
 ```
 
-Open http://localhost:3000, create an account and start writing notes.
-Data is stored in SQLite on the `notes-data` Docker volume, so it survives restarts and rebuilds.
+Then open **http://localhost:3000**, click **Create account** and start writing notes.
+
+To check that it's running:
 
 ```bash
-docker compose logs -f     # view logs
-docker compose down        # stop (keeps data)
-docker compose down -v     # stop and delete all data
+docker compose ps
 ```
+
+The `STATUS` column should say `Up ... (healthy)`.
+
+Notes are stored in SQLite on the `notes-data` Docker volume, so they survive restarts and rebuilds.
+
+### Everyday commands
+
+Run these inside the `docker-notes-app` folder:
+
+```bash
+docker compose logs -f              # view logs (Ctrl+C to exit)
+docker compose down                 # stop the app (keeps your notes)
+docker compose up -d                # start it again
+git pull && docker compose up -d --build   # update to the latest version
+docker compose down -v              # stop and DELETE all notes and accounts
+```
+
+### Troubleshooting
+
+- **"port is already allocated" / port 3000 in use:** run it on another port, for example 8080, then open http://localhost:8080:
+  ```bash
+  HOST_PORT=8080 docker compose up -d --build
+  ```
+  On Windows PowerShell, use `$env:HOST_PORT=8080; docker compose up -d --build` instead.
+- **"Cannot connect to the Docker daemon":** Docker Desktop isn't running. Start it, wait until it says "Engine running", and try again.
+- **`docker: command not found`:** install Docker Desktop, or reinstall its command-line tools from Docker Desktop → Settings → Advanced.
 
 ## Features
 
@@ -48,7 +81,8 @@ docker compose down -v     # stop and delete all data
 
 | Variable          | Default          | Description                                             |
 |-------------------|------------------|---------------------------------------------------------|
-| `PORT`            | `3000`           | HTTP port                                               |
+| `HOST_PORT`       | `3000`           | Port on your computer (Docker Compose only)             |
+| `PORT`            | `3000`           | Port inside the container / for `npm start`             |
 | `DB_PATH`         | `/data/notes.db` | SQLite file location                                    |
 | `COOKIE_SECURE`   | `false`          | Set `true` when served over HTTPS (also enables HSTS)   |
 | `TRUST_PROXY`     | `false`          | Set `true` behind a reverse proxy, so client IPs are correct |
@@ -56,7 +90,7 @@ docker compose down -v     # stop and delete all data
 
 ## Local development (without Docker)
 
-Requires Node.js 22.13 or later (it uses the built-in `node:sqlite`).
+Requires Node.js 22.13 or later (it uses the built-in `node:sqlite`). Run these inside the cloned `docker-notes-app` folder:
 
 ```bash
 npm install
