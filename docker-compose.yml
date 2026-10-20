@@ -1,0 +1,23 @@
+services:
+  notes:
+    build: .
+    image: docker-notes-app:latest
+    container_name: docker-notes-app
+    ports:
+      - "3000:3000"
+    environment:
+      # Set to "true" when serving over HTTPS (e.g. behind a TLS reverse proxy).
+      COOKIE_SECURE: "false"
+      TRUST_PROXY: "false"
+      AUTH_RATE_LIMIT: "30"
+    volumes:
+      - notes-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+volumes:
+  notes-data:

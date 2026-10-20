@@ -1,0 +1,140 @@
+:root {
+  --accent: #6366f1;
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --text: #1f2330;
+  --muted: #6b7280;
+  --border: #e3e5ec;
+  --danger: #dc2626;
+  --note-default: #ffffff;
+  --note-yellow: #fff7c2;
+  --note-green: #d9f7e1;
+  --note-blue: #dbeafe;
+  --note-purple: #ede4ff;
+  --note-pink: #ffe0ec;
+  --note-orange: #ffe6cc;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #12141b;
+  --surface: #1b1e27;
+  --text: #e8eaf0;
+  --muted: #9aa1b2;
+  --border: #2c303c;
+  --note-default: #1b1e27;
+  --note-yellow: #3b3519;
+  --note-green: #1b3626;
+  --note-blue: #1b2b45;
+  --note-purple: #2c2246;
+  --note-pink: #3d1f2c;
+  --note-orange: #3d2a17;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.hidden { display: none !important; }
+.muted { color: var(--muted); margin: 0; }
+.center { text-align: center; }
+.hint { font-size: 13px; color: var(--muted); margin: 0; }
+.error { color: var(--danger); min-height: 1.2em; margin: 8px 0 0; font-size: 14px; }
+
+input, textarea, select, button, .btn {
+  font: inherit;
+  color: inherit;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+textarea { resize: vertical; width: 100%; }
+button, .btn { cursor: pointer; text-decoration: none; display: inline-block; }
+button:hover, .btn:hover { filter: brightness(0.96); }
+.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.danger-outline { color: var(--danger); border-color: var(--danger); background: transparent; }
+.icon-btn { padding: 6px 10px; background: transparent; }
+label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+label.check { flex-direction: row; align-items: center; gap: 6px; font-size: 14px; color: var(--text); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.row.end { justify-content: flex-end; }
+.row.between { justify-content: space-between; }
+
+/* Auth */
+.auth { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+.auth-card { width: 100%; max-width: 400px; }
+.auth-card h1 { margin: 0 0 4px; }
+.auth-card form { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.tabs { display: flex; gap: 4px; margin-top: 16px; background: var(--bg); padding: 4px; border-radius: 12px; }
+.tabs button { flex: 1; border: 0; background: transparent; }
+.tabs button.active { background: var(--surface); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.meter { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.meter span { display: block; height: 100%; width: 0; transition: width .2s, background .2s; }
+
+/* App */
+#app-view { max-width: 1100px; margin: 0 auto; padding: 24px 16px 60px; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.topbar h2 { margin: 0; }
+.top-actions { display: flex; gap: 8px; align-items: center; }
+.avatar {
+  width: 42px; height: 42px; border-radius: 50%; padding: 0;
+  background: var(--accent); color: #fff; border: 0; font-weight: 700;
+}
+.toolbar { display: flex; gap: 12px; margin: 20px 0 10px; align-items: center; }
+.toolbar input[type="search"] { flex: 1; min-width: 0; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.chip { padding: 3px 10px; border-radius: 999px; font-size: 13px; background: var(--surface); }
+.chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.composer { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.composer .row input[name="tags"] { flex: 1; min-width: 160px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.note {
+  border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+  display: flex; flex-direction: column; gap: 8px; min-height: 120px;
+  overflow-wrap: anywhere;
+}
+.note h4 { margin: 0; font-size: 16px; }
+.note .body { white-space: pre-wrap; margin: 0; flex: 1; max-height: 240px; overflow: hidden; }
+.note .meta { font-size: 12px; color: var(--muted); }
+.note .tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.note .tag { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: rgba(127,127,127,.15); }
+.note .actions { display: flex; gap: 4px; }
+.note .actions button { padding: 4px 8px; font-size: 13px; background: transparent; border-color: transparent; }
+.note .actions button:hover { border-color: var(--border); }
+.note.pinned { box-shadow: 0 0 0 2px var(--accent); }
+.c-default { background: var(--note-default); }
+.c-yellow { background: var(--note-yellow); }
+.c-green { background: var(--note-green); }
+.c-blue { background: var(--note-blue); }
+.c-purple { background: var(--note-purple); }
+.c-pink { background: var(--note-pink); }
+.c-orange { background: var(--note-orange); }
+
+dialog {
+  border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+  background: var(--surface); color: var(--text);
+  width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+}
+dialog::backdrop { background: rgba(0,0,0,.4); }
+dialog h3 { margin: 0; }
+.panel { border-top: 1px solid var(--border); padding-top: 12px; }
+.panel h4 { margin: 0 0 8px; }
+.list { list-style: none; padding: 0; margin: 0 0 10px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.list li { padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; }
+.ok { color: #16a34a; }
+.fail { color: var(--danger); }
+.qr { width: 180px; height: 180px; background: #fff; padding: 8px; border-radius: 10px; }
+code { font-size: 13px; word-break: break-all; }
+
+@media (max-width: 600px) {
+  .toolbar { flex-wrap: wrap; }
+  .composer .row button.primary { width: 100%; }
+}

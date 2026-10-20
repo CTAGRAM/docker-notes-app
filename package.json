@@ -1,0 +1,21 @@
+{
+  "name": "docker-notes-app",
+  "version": "1.0.0",
+  "description": "Dockerized notes app with personalized, secure authentication (user ID + password, 2FA, sessions).",
+  "main": "src/server.js",
+  "private": true,
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "otplib": "12.0.1",
+    "qrcode": "^1.5.4"
+  }
+}

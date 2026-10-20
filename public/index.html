@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docker Notes</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <!-- ===== Auth ===== -->
+  <main id="auth-view" class="auth hidden">
+    <div class="card auth-card">
+      <h1>📝 Docker Notes</h1>
+      <p class="muted">Your private, secure notebook.</p>
+      <div class="tabs">
+        <button type="button" data-tab="login" class="active">Sign in</button>
+        <button type="button" data-tab="register">Create account</button>
+      </div>
+
+      <form id="login-form">
+        <label>User ID or email<input name="login" autocomplete="username" required></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+        <label id="totp-field" class="hidden">2FA code
+          <input name="totp" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="123456">
+        </label>
+        <button class="primary" type="submit">Sign in</button>
+      </form>
+
+      <form id="register-form" class="hidden">
+        <label>Display name<input name="displayName" maxlength="50" placeholder="What should we call you?"></label>
+        <label>User ID<input name="username" autocomplete="username" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_.\-]+"></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required></label>
+        <label>Password<input name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="128"></label>
+        <div class="meter"><span id="pw-meter"></span></div>
+        <p class="hint" id="pw-hint">8+ characters with a letter and a number.</p>
+        <button class="primary" type="submit">Create account</button>
+      </form>
+
+      <p id="auth-error" class="error" role="alert"></p>
+    </div>
+  </main>
+
+  <!-- ===== App ===== -->
+  <div id="app-view" class="hidden">
+    <header class="topbar">
+      <div>
+        <h2 id="greeting"></h2>
+        <p class="muted" id="stats"></p>
+      </div>
+      <div class="top-actions">
+        <button type="button" id="theme-toggle" class="icon-btn" title="Toggle theme">🌓</button>
+        <button type="button" id="settings-btn" class="avatar" title="Account &amp; security"></button>
+      </div>
+    </header>
+
+    <section class="toolbar">
+      <input id="search" type="search" placeholder="Search notes…">
+      <label class="check"><input type="checkbox" id="show-archived"> Archived</label>
+    </section>
+    <div id="tag-filter" class="chips"></div>
+
+    <form id="note-form" class="card composer">
+      <input name="title" placeholder="Title" maxlength="200">
+      <textarea name="content" placeholder="Take a note…" rows="3" maxlength="20000"></textarea>
+      <div class="row">
+        <input name="tags" placeholder="tags, comma separated">
+        <select name="color" class="color-select"></select>
+        <label class="check"><input type="checkbox" name="pinned"> Pin</label>
+        <button class="primary" type="submit">Add note</button>
+      </div>
+    </form>
+
+    <section id="notes" class="grid"></section>
+    <p id="empty" class="muted center hidden">No notes here yet.</p>
+  </div>
+
+  <!-- ===== Edit note ===== -->
+  <dialog id="edit-dialog">
+    <form id="edit-form" method="dialog" class="stack">
+      <h3>Edit note</h3>
+      <input name="title" placeholder="Title" maxlength="200">
+      <textarea name="content" rows="10" maxlength="20000"></textarea>
+      <input name="tags" placeholder="tags, comma separated">
+      <select name="color" class="color-select"></select>
+      <div class="row end">
+        <button type="button" data-close>Cancel</button>
+        <button class="primary" type="submit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===== Settings ===== -->
+  <dialog id="settings-dialog">
+    <div class="stack">
+      <div class="row between">
+        <h3>Account &amp; security</h3>
+        <button type="button" data-close class="icon-btn">✕</button>
+      </div>
+
+      <section class="panel">
+        <h4>Profile</h4>
+        <p class="muted" id="profile-meta"></p>
+        <form id="profile-form" class="stack">
+          <label>Display name<input name="displayName" maxlength="50" required></label>
+          <div class="row">
+            <label>Theme
+              <select name="theme"><option value="light">Light</option><option value="dark">Dark</option></select>
+            </label>
+            <label>Accent color<input name="accent" type="color"></label>
+          </div>
+          <button class="primary" type="submit">Save profile</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h4>Change password</h4>
+        <form id="password-form" class="stack">
+          <input name="currentPassword" type="password" placeholder="Current password" autocomplete="current-password" required>
+          <input name="newPassword" type="password" placeholder="New password" autocomplete="new-password" required minlength="8">
+          <button class="primary" type="submit">Update password</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h4>Two-factor authentication</h4>
+        <div id="twofa"></div>
+      </section>
+
+      <section class="panel">
+        <h4>Active sessions</h4>
+        <ul id="sessions" class="list"></ul>
+        <button type="button" id="logout-all" class="danger-outline">Sign out of all devices</button>
+      </section>
+
+      <section class="panel">
+        <h4>Recent sign-in activity</h4>
+        <ul id="activity" class="list"></ul>
+      </section>
+
+      <section class="panel">
+        <h4>Your data</h4>
+        <div class="row">
+          <a class="btn" href="/api/notes/export" download>Export notes (JSON)</a>
+          <button type="button" id="logout" class="btn">Sign out</button>
+          <button type="button" id="delete-account" class="danger-outline">Delete account</button>
+        </div>
+      </section>
+      <p id="settings-msg" class="hint" role="status"></p>
+    </div>
+  </dialog>
+</body>
+</html>
