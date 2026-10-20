@@ -145,13 +145,17 @@ start_docker() {
     say "Docker is not running - starting it..."
     if systemctl --user cat docker-desktop >/dev/null 2>&1; then
       systemctl --user start docker-desktop || true
-    elif [ -d /run/systemd/system ]; then
-      $SUDO systemctl enable --now docker >/dev/null 2>&1 || $SUDO systemctl start docker || true
+      return 0
+    fi
+    if [ -d /run/systemd/system ]; then
+      $SUDO systemctl enable --now docker >/dev/null 2>&1 || true
     elif [ -x /etc/init.d/docker ]; then
       $SUDO /etc/init.d/docker start >/dev/null 2>&1 || true
     elif has rc-service; then
-      $SUDO rc-service docker start || true
-    else
+      $SUDO rc-service docker start >/dev/null 2>&1 || true
+    fi
+    # No service manager (e.g. WSL without systemd), or it failed: start the engine directly.
+    if ! wait_for 15 docker_up && has dockerd; then
       $SUDO sh -c 'nohup dockerd >/var/log/dockerd.log 2>&1 &'
     fi
   fi
